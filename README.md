@@ -31,9 +31,7 @@ Calculates the probability of surviving for each person i and time interval u.
 
   - **Louis Everest** - [aut,cre]
 
-See also the list of
-[contributors](https://github.com/PurpleBooth/a-good-readme-template/contributors)
-who participated in this project.
+
 
 ## License
 
