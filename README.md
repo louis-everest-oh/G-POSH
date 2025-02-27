@@ -1,6 +1,6 @@
 # G-computation for Policy evaluation in Occupational Safety and Health (G-POSH)
 
-Contains easy-to-use G-computation functions for occupational health research, to summarise potential impacts of policy alternatives on cause-specific mortality.
+Contains easy-to-use G-computation functions for occupational health research, to summarise the potential impacts of policy alternatives on cause-specific mortality.
 
 ### Developlemt Notes
  This is a beta version of the GPOSH package 
@@ -10,6 +10,7 @@ Install from Github
 
     library(devtools) 
     install_github("louis-everest-oh/G-POSH")
+    library("GPOSH")
     
 
 ## Functions
