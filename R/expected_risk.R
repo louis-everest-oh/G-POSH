@@ -20,22 +20,22 @@
 expected_risks <- function(data, hazards, id_in = "id", prefix = ""){
   du_helper <- function(h,d){h-d*(h-1)}
   data_hazards <- data %>%
-    group_by(!!sym(id_in)) %>% ## group by worker id
-    mutate(h_pooled = rowSums(across(all_of(hazards))), # pooled hazards
-           d_pooled = accumulate(h_pooled, du_helper), # overall d_u
-           s_pooled = 1 - lag(d_pooled, default = 0), # overall S_u probability of survival
-           across(all_of(hazards),
+    dplyr::group_by(!!dplyr::sym(id_in)) %>% ## group by worker id
+    dplyr::mutate(h_pooled = rowSums(dplyr::across(dplyr::all_of(hazards))), # pooled hazards
+           d_pooled = purrr::accumulate(h_pooled, du_helper), # overall d_u
+           s_pooled = 1 - dplyr::lag(d_pooled, default = 0), # overall S_u probability of survival
+           dplyr::across(dplyr::all_of(hazards),
                   .names = "D_u_{sub(prefix,'',.col)}",
                   function(x){cumsum(s_pooled*x)}), ## condition specific D_u, the probability an event occurs, given that you have survived to time t
-           S_u = 1- rowSums(across(starts_with("D_u_"))), ## Overall survival function, the sum of the cumulative hazards (D_u) for the exhaustive set of competing events
-           across(all_of(hazards),
+           S_u = 1- rowSums(dplyr::across(dplyr::starts_with("D_u_"))), ## Overall survival function, the sum of the cumulative hazards (D_u) for the exhaustive set of competing events
+           dplyr::across(dplyr::all_of(hazards),
                   .names = "rt_{sub(prefix,'',.col)}",
-                  function(x){x *lag(S_u, default = 1)})) ## Cumulative risk for each event of interest
+                  function(x){x *dplyr::lag(S_u, default = 1)})) ## Cumulative risk for each event of interest
 
   summary_hazards <- data_hazards %>%
-    ungroup() %>%
-    summarize( across(all_of(starts_with(c("rt_","s_pooled"))), sum)) %>%
-    rename("Estimated Person Years" = s_pooled)
+    dplyr::ungroup() %>%
+    dplyr::summarize( dplyr::across(dplyr::all_of(dplyr::starts_with(c("rt_","s_pooled"))), sum)) %>%
+    dplyr::rename("Estimated Person Years" = s_pooled)
 
   return(list("expected events" = summary_hazards,
               "all data" = data_hazards))
